@@ -1,0 +1,165 @@
+<!doctype html>
+<html>
+	<head>
+	<title>XSLT/XPATH - Recipes Home</title>
+	<script src="../angular-1.3.9/angular.js"></script>
+	
+	<link href="jquery-ui-1.11.4.custom/jquery-ui.css" rel="stylesheet">
+	<link href="jquery-ui-1.11.4.custom/jquery-ui.theme.css" rel="stylesheet">
+
+	<script src="jquery-ui-1.11.4.custom/external/jquery/jquery.js"></script>
+	<script src="jquery-ui-1.11.4.custom/jquery-ui.js"></script>
+	
+	<link href="tutorial.css" rel="stylesheet">
+	</head>
+<body>
+<h1>XSLT & XPATH Examples</h1>
+<h3>Amitava Chakraborty</h3>
+<h4>12/05/2016</h4>
+<hr/>
+<!-- Highlight / Error -->
+<div class="ui-widget">
+	<div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;">
+		<h2 class="demoHeaders"><a href="xslt.html">XSLT Recipes</a></h2>
+	</div>
+	<div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;">
+		<h2 class="demoHeaders"><a href="xslt.html">XPATH Recipes</a></h2>
+	</div>
+</div>
+<script>
+
+$(function(){
+	$("#accordion").accordion(
+		{
+		collapsible:true,
+		heightStyle:content
+		}
+	)
+	});
+
+
+
+var availableTags = [
+	"ActionScript",
+	"AppleScript",
+	"Asp",
+	"BASIC",
+	"C",
+	"C++",
+	"Clojure",
+	"COBOL",
+	"ColdFusion",
+	"Erlang",
+	"Fortran",
+	"Groovy",
+	"Haskell",
+	"Java",
+	"JavaScript",
+	"Lisp",
+	"Perl",
+	"PHP",
+	"Python",
+	"Ruby",
+	"Scala",
+	"Scheme"
+];
+$( "#autocomplete" ).autocomplete({
+	source: availableTags,
+	autoFocus:true
+});
+
+var countries = [
+                  { label: "India", value: "IND" },
+                  { label: "Australia", value: "AUS" }
+               ];
+$( "#autocomplete-country" ).autocomplete({
+	source: countries,
+	autoFocus:true
+});
+
+
+
+
+$( "#button" ).button();
+$( "#radioset" ).buttonset();
+
+
+
+$( "#tabs" ).tabs();
+
+
+
+$( "#dialog" ).dialog({
+	autoOpen: false,
+	width: 400,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
+// Link to open the dialog
+$( "#dialog-link" ).click(function( event ) {
+	$( "#dialog" ).dialog( "open" );
+	event.preventDefault();
+});
+
+
+
+$( "#datepicker" ).datepicker({
+	inline: true
+});
+
+
+
+$( "#slider" ).slider({
+	range: true,
+	values: [ 17, 67 ]
+});
+
+
+
+$( "#progressbar" ).progressbar({
+	value: 20
+});
+
+
+
+$( "#spinner" ).spinner();
+
+
+
+$( "#menu" ).menu();
+
+
+
+$( "#tooltip" ).tooltip();
+
+
+
+$( "#selectmenu" ).selectmenu();
+
+
+// Hover states on the static widgets
+$( "#dialog-link, #icons li" ).hover(
+	function() {
+		$( this ).addClass( "ui-state-hover" );
+	},
+	function() {
+		$( this ).removeClass( "ui-state-hover" );
+	}
+);
+</script>
+
+</body>
+</html>

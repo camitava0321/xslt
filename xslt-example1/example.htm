@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<body>
+<script>
+
+function loadXMLDoc(dname)
+{
+if (window.XMLHttpRequest)
+  {
+  xhttp=new XMLHttpRequest();
+  }
+else
+  {
+  xhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+xhttp.open("GET",dname,false);
+try {xhttp.responseType="msxml-document"} catch(err) {} // Helping IE
+xhttp.send("");
+return xhttp;
+}
+
+var x=loadXMLDoc("example.xml");
+var xml=x.responseXML;
+
+function getPath(path) {
+// code for IE
+if (window.ActiveXObject || xhttp.responseType=="msxml-document")
+{
+xml.setProperty("SelectionLanguage","XPath");
+nodes=xml.selectNodes(path);
+for (i=0;i<nodes.length;i++)
+  {
+  document.write(nodes[i].childNodes[0].nodeValue);
+  document.write("<br>");
+  }
+}
+
+// code for Chrome, Firefox, Opera, etc.
+else if (document.implementation && document.implementation.createDocument)
+{
+var nodes=xml.evaluate(path, xml, null, XPathResult.ANY_TYPE, null);
+var result=nodes.iterateNext();
+
+while (result)
+  {
+  console.log(result);
+  document.write("Node Name : <span style=\"color:blue\">"+result.nodeName+"</span>\t");
+  document.write("Node Value: <span style=\"color:green\">"+result.childNodes[0].nodeValue+"</span>");
+  document.write("<br>");
+  result=nodes.iterateNext();
+  }
+}
+}
+
+function printObject(object){
+var output = '';
+for (var property in object) {
+  output += property + ': ' + object[property]+'; ';
+}
+document.write(output);
+}
+
+</script>
+<h2>Selects all nodes with the name "bookstore"</h2>
+<pre>path="bookstore"</pre>
+<script>
+path="bookstore";
+getPath(path);
+</script>
+<h2>Selects 'bookstore' from Root Element</h2>
+<pre>path="/bookstore"</pre>
+<script>
+path="bookstore";
+getPath(path);
+</script>
+<h2>Selects all book elements that are children of bookstore</h2>
+<pre>path="bookstore/book"</pre>
+<script>
+path="bookstore/book";
+getPath(path);
+</script>
+<h2>Selects all book elements no matter where they are in the document</h2>
+<pre>path="//book"</pre>
+<script>
+path="//book";
+getPath(path);
+</script>
+<h2>Selects all book elements that are descendant of the bookstore element, no matter where they are under the bookstore element</h2>
+<pre>path="bookstore//book"</pre>
+<script>
+path="bookstore//book";
+getPath(path);
+</script>
+<h2>Selects all attributes that are named lang</h2>
+<pre>path="//@lang"</pre>
+<script>
+path="//@lang";
+getPath(path);
+</script>
+<h2>Selects all title nodes</h2>
+<pre>path="/bookstore/book/title"</pre>
+<script>
+path="/bookstore/book/title";
+getPath(path);
+</script>
+<h2>Selects the first book element that is the child of the bookstore element</h2>
+<pre>path="/bookstore/book[1]"</pre>
+<script>
+path="/bookstore/book[1]";
+getPath(path);
+</script>
+<h2>Selects the last book element that is the child of the bookstore element</h2>
+<pre>path="/bookstore/book[last()]"</pre>
+<script>
+path="/bookstore/book[last()]";
+getPath(path);
+</script>
+<h2>Selects the last but one book element that is the child of the bookstore element</h2>
+<pre>path="/bookstore/book[last()-1]"</pre>
+<script>
+path="/bookstore/book[last()-1]";
+getPath(path);
+</script>
+<h2>Selects the first two book elements that are children of the bookstore element</h2>
+<pre>path="/bookstore/book[position()<3]"</pre>
+<script>
+path="/bookstore/book[position()<3]";
+getPath(path);
+</script>
+<h2>Selects all the title elements that have an attribute named lang</h2>
+<pre>path="//title[@lang]"</pre>
+<script>
+path="//title[@lang]";
+getPath(path);
+</script>
+<h2>Selects all the title elements that have a "lang" attribute with a value of "en"</h2>
+<pre>path="//title[@lang='en']"</pre>
+<script>
+path="//title[@lang='en']";
+getPath(path);
+</script>
+<h2>Selects all the book elements of the bookstore element that have a price element with a value greater than 35.00</h2>
+<pre>path="/bookstore/book[price>35.00]"</pre>
+<script>
+path="/bookstore/book[price>35.00]";
+getPath(path);
+</script>
+<h2>Selects all the title elements of the book elements of the bookstore element that have a price element with a value greater than 35.00</h2>
+<pre>path="/bookstore/book[price>35.00]/title"</pre>
+<script>
+path="/bookstore/book[price>35.00]/title";
+getPath(path);
+</script>
+<h2>Matches any element node [first occurence]</h2>
+<pre>path="*"</pre>
+<script>
+path="*";
+getPath(path);
+</script>
+<h2>Matches any attribute node [first occurence]</h2>
+<pre>path="@*"</pre>
+<script>
+path="@*";
+getPath(path);
+</script>
+<h2>Matches any node of any kind [first occurence]</h2>
+<pre>path="node()"</pre>
+<script>
+path="node()";
+getPath(path);
+</script>
+<h2>Selects all the child element nodes of the bookstore element</h2>
+<pre>path="/bookstore/*"</pre>
+<script>
+path="/bookstore/*";
+getPath(path);
+</script>
+<h2>Selects all title elements which have at least one attribute of any kind</h2>
+<pre>path="//title[@*]"</pre>
+<script>
+path="//title[@*]";
+getPath(path);
+</script>
+<h2>Selects all elements in the document</h2>
+<pre>path="//*"</pre>
+<script>
+path="//*";
+getPath(path);
+</script>
+<h2>Selects all the title AND price elements of all book elements</h2>
+<pre>path="//book/title | //book/price"</pre>
+<script>
+path="//book/title | //book/price";
+getPath(path);
+</script>
+<h2>Selects all the title AND price elements in the document</h2>
+<pre>path="//title | //price"</pre>
+<script>
+path="//title | //price";
+getPath(path);
+</script>
+<h2>Selects all the title elements of the book element of the bookstore element AND all the price elements in the document</h2>
+<pre>path="/bookstore/book/title | //price"</pre>
+<script>
+path="/bookstore/book/title | //price";
+getPath(path);
+</script>
+
+<h1>XPath Axes</h1>
+<p>An axis defines a node-set relative to the current node. Mostly used in XSLT.</p>
+
+<h2>Selects all children of the current node</h2>
+<pre>path="/bookstore/child::book"</pre>
+<script>
+path="/bookstore/child::book";
+getPath(path);
+</script>
+<h2>Selects all ancestors (parent, grandparent, etc.) of the current node</h2>
+<pre>path="/bookstore/book[3]/title/ancestor::*"</pre>
+<script>
+path="/bookstore/book[3]/title/ancestor::*";
+getPath(path);
+</script>
+<h2>Selects all ancestors (parent, grandparent, etc.) of the current node and the current node itself</h2>
+<pre>path="/bookstore/book[3]/title/ancestor-or-self::*"</pre>
+<script>
+path="/bookstore/book[3]/title/ancestor-or-self::*";
+getPath(path);
+</script>
+<h2>Selects all attributes of the current node</h2>
+<pre>path="/bookstore/book[3]/attribute::*"</pre>
+<script>
+path="/bookstore/book[3]/attribute::*";
+getPath(path);
+</script>
+<h2>Selects all descendants (children, grandchildren, etc.) of the current node</h2>
+<pre>path="/bookstore/book[3]/descendents::author"</pre>
+<script>
+path="/bookstore/book[3]/descendant::author";
+getPath(path);
+</script>
+<h2>Selects all descendants (children, grandchildren, etc.) of the current node and the current node itself</h2>
+<pre>path="/bookstore/book[3]/descendant-or-self::*"</pre>
+<script>
+path="/bookstore/book[3]/descendant::*";
+getPath(path);
+</script>
+<h2>Selects all books in the document after the closing tag of the current node</h2>
+<pre>path="/bookstore/book[2]/following::book"</pre>
+<script>
+path="/bookstore/book[2]/following::book";
+getPath(path);
+</script>
+<h2>Selects all siblings after the current node</h2>
+<pre>path="/bookstore/book[2]/following-sibling::*"</pre>
+<script>
+path="/bookstore/book[2]/following-sibling::*";
+getPath(path);
+</script>
+<h2>Selects all namespace nodes of the current node</h2>
+<pre>path="/bookstore/book[2]/namespace::*"</pre>
+<script>
+path="/bookstore/book[2]/namespace::*";
+getPath(path);
+</script>
+<h2>Selects the parent of the current node</h2>
+<pre>path="/bookstore/book[2]/title/parent::*"</pre>
+<script>
+path="/bookstore/book[2]/title/parent::*";
+getPath(path);
+</script>
+<h2>Selects all nodes that appear before the current node in the document, except ancestors, attribute nodes and namespace nodes</h2>
+<pre>path="/bookstore/book[2]/title/preceding::*"</pre>
+<script>
+path="/bookstore/book[2]/title/preceding::*";
+getPath(path);
+</script>
+<h2>Selects all siblings before the current node</h2>
+<pre>path="/bookstore/book[2]/price/preceding-sibling::*"</pre>
+<script>
+path="/bookstore/book[2]/price/preceding-sibling::*";
+getPath(path);
+</script>
+<h2>Selects the current node</h2>
+<pre>path="/bookstore/book[2]/title/self::*"</pre>
+<script>
+path="/bookstore/book[2]/title/self::*";
+getPath(path);
+</script>
+
+<!--
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	 	
+ 	
+ 	 	
+ 	
+ 	-->
+</body>
+</html>

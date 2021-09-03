@@ -1,0 +1,754 @@
+<!doctype html>
+<html>
+	<head>
+	<title>XSLT - Recipes</title>
+	<script src="../angular-1.3.9/angular.js"></script>
+	
+	<link href="jquery-ui-1.11.4.custom/jquery-ui.css" rel="stylesheet">
+	<link href="jquery-ui-1.11.4.custom/jquery-ui.theme.css" rel="stylesheet">
+
+	<script src="jquery-ui-1.11.4.custom/external/jquery/jquery.js"></script>
+	<script src="jquery-ui-1.11.4.custom/jquery-ui.js"></script>
+	
+	<link href="tutorial.css" rel="stylesheet">
+	</head>
+<body>
+<h1>XSLT Recipes</h1>
+<h3>Amitava Chakraborty</h3>
+<h4>12/05/2016</h4>
+<hr/>
+
+<div class="ui-widget">
+	<p>Following are my notes on XSLT.</p>
+</div>
+
+<!-- Accordion -->
+<h1 class="demoHeaders">Chapters</h1>
+<div id="accordion">
+<!-- First Accordian Tab -->
+	<h2>Link the XSLT to XML</h2>
+	<div>
+<pre>
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;?xml-stylesheet type=&quot;text/xsl&quot; href=&quot;cdcatalog.xsl&quot;?&gt;
+</pre>
+</div>
+
+<!-- Second Accordian Tab -->
+	<h2>The &lt;xsl:template&gt; Element</h2>
+	<div>
+<pre>
+&lt;xsl:template match=&quot;/&quot;&gt;
+</pre>
+</div>
+
+<!-- Second Accordian Tab -->
+	<h2>Extract the value of a selected node</h2>
+	<div>
+<pre>&lt;td&gt;&lt;xsl:value-of select=&quot;catalog/cd/title&quot;/&gt;&lt;/td&gt;</pre>
+</div>
+
+<!-- Second Accordian Tab -->
+	<h2>Looping in XSLT</h2>
+	<div>
+<pre>
+&lt;xsl:for-each select=&quot;catalog/cd&quot;&gt;
+	&lt;tr&gt;
+		&lt;td&gt;&lt;xsl:value-of select=&quot;title&quot;/&gt;&lt;/td&gt;
+		&lt;td&gt;&lt;xsl:value-of select=&quot;artist&quot;/&gt;&lt;/td&gt;
+	&lt;/tr&gt;
+&lt;/xsl:for-each&gt;
+</pre>
+
+<h3>Filter Output</h3>
+<pre>&lt;xsl:for-each select=&quot;catalog/cd[artist='Bob Dylan']&quot;&gt;
+</pre>
+<p>
+Legal filter operators are:
+<ul class="list">
+<li>=  (equal)</li>
+<li>!= (not equal)</li>
+<li>&lt; less than</li>
+<li>&gt; greater than</li>
+</ul>
+.e.g,
+</p>
+<pre>&lt;xsl:for-each select=&quot;catalog/cd[artist='Bob Dylan']&quot;&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;xsl:value-of select=&quot;title&quot;/&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;xsl:value-of select=&quot;artist&quot;/&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;/xsl:for-each&gt;</pre>
+
+</div>
+
+<!-- Second Accordian Tab -->
+	<h2>Sort the output</h2>
+	<div>
+<pre>
+&lt;xsl:for-each select=&quot;catalog/cd&quot;&gt;
+&lt;xsl:sort select=&quot;artist&quot;/&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;xsl:value-of select=&quot;title&quot;/&gt;&lt;/td&gt;
+&lt;td&gt;&lt;xsl:value-of select=&quot;artist&quot;/&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/xsl:for-each&gt;
+</pre>
+</div>
+
+<!-- Second Accordian Tab -->
+	<h2>Conditional test against the content of the XML file</h2>
+	<div>
+<pre>
+&lt;xsl:if test=&quot;expression&quot;&gt;
+  ...some output if the expression is true...
+&lt;/xsl:if&gt;
+</pre>
+<p>Example :
+</p>
+<pre>    
+&lt;xsl:for-each select=&quot;catalog/cd&quot;&gt;
+      &lt;xsl:if test=&quot;price &amp;gt; 10&quot;&gt;
+        &lt;tr&gt;
+          &lt;td&gt;&lt;xsl:value-of select=&quot;title&quot;/&gt;&lt;/td&gt;
+          &lt;td&gt;&lt;xsl:value-of select=&quot;artist&quot;/&gt;&lt;/td&gt;
+          &lt;td&gt;&lt;xsl:value-of select=&quot;price&quot;/&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      &lt;/xsl:if&gt;
+    &lt;/xsl:for-each&gt;
+</pre>
+</div>
+
+<!-- Second Accordian Tab -->
+	<h2>&lt;xsl:choose&gt; Element</h2>
+	<div>
+	Syntax
+<pre>&lt;xsl:choose&gt;
+  &lt;xsl:when test=&quot;expression&quot;&gt;
+    ... some output ...
+  &lt;/xsl:when&gt;
+  &lt;xsl:otherwise&gt;
+    ... some output ....
+  &lt;/xsl:otherwise&gt;
+&lt;/xsl:choose&gt;</pre>
+<p>Example 1:
+</p>
+<pre>
+    &lt;/tr&gt;
+    &lt;xsl:for-each select=&quot;catalog/cd&quot;&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;xsl:value-of select=&quot;title&quot;/&gt;&lt;/td&gt;
+      &lt;xsl:choose&gt;
+        &lt;xsl:when test=&quot;price &amp;gt; 10&quot;&gt;
+          &lt;td bgcolor=&quot;#ff00ff&quot;&gt;
+          &lt;xsl:value-of select=&quot;artist&quot;/&gt;&lt;/td&gt;
+        &lt;/xsl:when&gt;
+        &lt;xsl:otherwise&gt;
+          &lt;td&gt;&lt;xsl:value-of select=&quot;artist&quot;/&gt;&lt;/td&gt;
+        &lt;/xsl:otherwise&gt;
+      &lt;/xsl:choose&gt;
+    &lt;/tr&gt;
+    &lt;/xsl:for-each&gt;
+</pre>
+<p>Example 2:
+</p>
+<pre>    &lt;xsl:for-each select=&quot;catalog/cd&quot;&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;xsl:value-of select=&quot;title&quot;/&gt;&lt;/td&gt;
+      &lt;xsl:choose&gt;
+        &lt;xsl:when test=&quot;price &amp;gt; 10&quot;&gt;
+          &lt;td bgcolor=&quot;#ff00ff&quot;&gt;
+          &lt;xsl:value-of select=&quot;artist&quot;/&gt;&lt;/td&gt;
+        &lt;/xsl:when&gt;
+        &lt;xsl:when test=&quot;price &amp;gt; 9&quot;&gt;
+          &lt;td bgcolor=&quot;#cccccc&quot;&gt;
+          &lt;xsl:value-of select=&quot;artist&quot;/&gt;&lt;/td&gt;
+        &lt;/xsl:when&gt;
+        &lt;xsl:otherwise&gt;
+          &lt;td&gt;&lt;xsl:value-of select=&quot;artist&quot;/&gt;&lt;/td&gt;
+        &lt;/xsl:otherwise&gt;
+      &lt;/xsl:choose&gt;
+    &lt;/tr&gt;
+    &lt;/xsl:for-each&gt;</pre>
+</div>
+
+<!-- Second Accordian Tab -->
+	<h2>Apply a template to the current element/child nodes of the current element</h2>
+	<div>
+<pre>
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;xsl:stylesheet version=&quot;1.0&quot;
+xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot;&gt;
+
+&lt;xsl:template match=&quot;/&quot;&gt;
+  &lt;html&gt;
+  &lt;body&gt;
+  &lt;h2&gt;My CD Collection&lt;/h2&gt;
+  &lt;xsl:apply-templates/&gt;
+  &lt;/body&gt;
+  &lt;/html&gt;
+&lt;/xsl:template&gt;
+
+&lt;xsl:template match=&quot;cd&quot;&gt;
+  &lt;p&gt;
+  &lt;xsl:apply-templates select=&quot;title&quot;/&gt;
+  &lt;xsl:apply-templates select=&quot;artist&quot;/&gt;
+  &lt;/p&gt;
+&lt;/xsl:template&gt;
+
+&lt;xsl:template match=&quot;title&quot;&gt;
+  Title: &lt;span style=&quot;color:#ff0000&quot;&gt;
+  &lt;xsl:value-of select=&quot;.&quot;/&gt;&lt;/span&gt;
+  &lt;br /&gt;
+&lt;/xsl:template&gt;
+
+&lt;xsl:template match=&quot;artist&quot;&gt;
+  Artist: &lt;span style=&quot;color:#00ff00&quot;&gt;
+  &lt;xsl:value-of select=&quot;.&quot;/&gt;&lt;/span&gt;
+  &lt;br /&gt;
+&lt;/xsl:template&gt;
+
+&lt;/xsl:stylesheet&gt;
+</pre>
+
+
+</div>
+
+<!-- Second Accordian Tab -->
+	<h2>Looping in XSLT</h2>
+	<div>
+<pre>
+&lt;xsl:template match=&quot;/&quot;&gt;
+</pre>
+
+<blockquote>AngularJS is a structural framework for dynamic web applications. It lets you use HTML as your template language and lets you extend HTML's syntax to express your application components clearly and succinctly. Its data binding and dependency injection eliminate much of the code you currently have to write. And it all happens within the browser, making it an ideal partner with any server technology.</blockquote>
+	It is open source - licensed under the Apache license version 2.0. Originally developed by Misko Hevery and Adam Abrons(2009). It is now maintained by Google. Its latest version is 1.3.9.<br>
+	It is used in Single Page Application (SPA) projects. It extends HTML DOM with additional attributes and makes it more responsive to user actions.
+
+<p>One can build large scale, high-performance, and easy-to-maintain web applications using AngularJS.</p>
+<h2>Core Components</h2>
+<p>The core features of AngularJS are as follows:</p>
+<ul class="list">
+<li><b>Data-binding:</b> Automatic synchronization of data between model and view components.</li>
+<li><b>Scope:</b> These are objects that refer to the model. They act as a glue between controller and view.</li>
+<li><b>Controller:</b> JavaScript functions bound to a particular scope.</li>
+<li><b>Services:</b> Built-in services (such as $http to make a XMLHttpRequests) - singleton objects instantiated only once in an app.</li>
+<li><b>Filters:</b> A subset of items from an array and returns a new array.</li>
+<li><b>Directives:</b> Markers on DOM elements such as elements, attributes, css, and more. These can be used to create custom HTML tags that serve as new, custom widgets. AngularJS has built-in directives such as ngBind, ngModel, etc.<br>
+The AngularJS framework can be divided into three major parts:
+<ul class="list">
+<li><p><b>ng-app</b> : This directive defines and links an AngularJS application to HTML.</p></li>
+<li><p><b>ng-model</b> : This directive binds the values of AngularJS application data to HTML input controls.</p></li>
+<li><p><b>ng-bind</b> : This directive binds the AngularJS application data to HTML tags.</p></li>
+</ul>
+</li>
+<li><b>Templates:</b>Rendered view with information from the controller and model. These can be a single file (such as index.html) or multiple views in one page using partials.</li>
+<li><b>Routing:</b> Concept of switching views.</li>
+<li><b>Model View Whatever:</b> MVW is a design pattern for dividing an application into different parts called Model, View, and Controller, each with distinct responsibilities. AngularJS does not implement MVC in the traditional sense, but rather something closer to MVVM (Model-View-ViewModel). The Angular JS team refers it humorously as Model View Whatever.</li>
+<li><b>Deep Linking:</b> Deep linking allows to encode the state of application in the URL so that it can be bookmarked. The application can then be restored from the URL to the same state.</li>
+<li><b>Dependency Injection:</b> AngularJS has a built-in dependency injection subsystem that helps the developer to create, understand, and test the applications easily.</li>
+</ul>
+
+<h2>Advantages and Disadvantages of AngularJS</h2>
+<table>
+   <tr>
+      <th>Advantages</th>
+      <th>Disadvantages</th>
+   </tr>
+   <tr>
+      <td>
+	<ul class="list">
+		<li><p>It provides the capability to create Single Page Application in a very clean and maintainable way.</p></li>
+		<li><p>It provides data binding capability to HTML. Thus, it gives user a rich and responsive experience.</p></li>
+		<li><p>AngularJS code is unit testable.</p></li>
+		<li><p>AngularJS uses dependency injection and make use of separation of concerns.</p></li>
+		<li><p>AngularJS provides reusable components.</p></li>
+		<li><p>With AngularJS, the developers can achieve more functionality with short code.</p></li>
+		<li><p>In AngularJS, views are pure html pages, and controllers written in JavaScript do the business processing.</p></li>
+	</ul>
+	</td>
+      <td><p>On the top of everything, AngularJS applications can run on all major browsers and smart phones, including Android and iOS based phones/tablets.</p>
+	</td>
+   </tr>
+   <tr>
+      <td>
+<ul class="list">
+<li><p><b>Not secure</b> : Being JavaScript only framework, application written in AngularJS are not safe. Server side authentication and authorization is must to keep an application secure.</p></li>
+<li><p><b>Not degradable</b>: If the user of your application disables JavaScript, then nothing would be visible, except the basic page.</p></li>
+</ul>
+	</td>
+      <td>
+	  <p></p>
+	</td>
+   </tr>
+</table>
+
+	</div>
+	
+<!-- Second Accordian Tab -->
+	<h2>Popup Dialog</h2>
+	<div>
+	<a href="01-popup.html">Popup Dialog</a>
+	</div>
+
+<!-- Third Accordian Tab -->
+	<h2>Autocomplete</h2>
+<!-- Autocomplete -->
+<div>
+<a href="02-autocomplete.html">Autocomplete</a>
+</div>
+</div>
+
+
+<!-- Button -->
+<h2 class="demoHeaders">Button</h2>
+<button id="button">A button element</button>
+<form style="margin-top: 1em;">
+	<div id="radioset">
+		<input type="radio" id="radio1" name="radio"><label for="radio1">Choice 1</label>
+		<input type="radio" id="radio2" name="radio" checked="checked"><label for="radio2">Choice 2</label>
+		<input type="radio" id="radio3" name="radio"><label for="radio3">Choice 3</label>
+	</div>
+</form>
+
+
+
+<!-- Tabs -->
+<h2 class="demoHeaders">Tabs</h2>
+<div id="tabs">
+	<ul>
+		<li><a href="#tabs-1">First</a></li>
+		<li><a href="#tabs-2">Second</a></li>
+		<li><a href="#tabs-3">Third</a></li>
+	</ul>
+	<div id="tabs-1">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</div>
+	<div id="tabs-2">Phasellus mattis tincidunt nibh. Cras orci urna, blandit id, pretium vel, aliquet ornare, felis. Maecenas scelerisque sem non nisl. Fusce sed lorem in enim dictum bibendum.</div>
+	<div id="tabs-3">Nam dui erat, auctor a, dignissim quis, sollicitudin eu, felis. Pellentesque nisi urna, interdum eget, sagittis et, consequat vestibulum, lacus. Mauris porttitor ullamcorper augue.</div>
+</div>
+
+
+
+<!-- Dialog NOTE: Dialog is not generated by UI in this demo so it can be visually styled in themeroller-->
+<h2 class="demoHeaders">Dialog</h2>
+<p><a href="#" id="dialog-link" class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-newwin"></span>Open Dialog</a></p>
+
+<h2 class="demoHeaders">Overlay and Shadow Classes <em>(not currently used in UI widgets)</em></h2>
+<div style="position: relative; width: 96%; height: 200px; padding:1% 2%; overflow:hidden;" class="fakewindowcontain">
+	<p>Lorem ipsum dolor sit amet,  Nulla nec tortor. Donec id elit quis purus consectetur consequat. </p><p>Nam congue semper tellus. Sed erat dolor, dapibus sit amet, venenatis ornare, ultrices ut, nisi. Aliquam ante. Suspendisse scelerisque dui nec velit. Duis augue augue, gravida euismod, vulputate ac, facilisis id, sem. Morbi in orci. </p><p>Nulla purus lacus, pulvinar vel, malesuada ac, mattis nec, quam. Nam molestie scelerisque quam. Nullam feugiat cursus lacus.orem ipsum dolor sit amet, consectetur adipiscing elit. Donec libero risus, commodo vitae, pharetra mollis, posuere eu, pede. Nulla nec tortor. Donec id elit quis purus consectetur consequat. </p><p>Nam congue semper tellus. Sed erat dolor, dapibus sit amet, venenatis ornare, ultrices ut, nisi. Aliquam ante. Suspendisse scelerisque dui nec velit. Duis augue augue, gravida euismod, vulputate ac, facilisis id, sem. Morbi in orci. Nulla purus lacus, pulvinar vel, malesuada ac, mattis nec, quam. Nam molestie scelerisque quam. </p><p>Nullam feugiat cursus lacus.orem ipsum dolor sit amet, consectetur adipiscing elit. Donec libero risus, commodo vitae, pharetra mollis, posuere eu, pede. Nulla nec tortor. Donec id elit quis purus consectetur consequat. Nam congue semper tellus. Sed erat dolor, dapibus sit amet, venenatis ornare, ultrices ut, nisi. Aliquam ante. </p><p>Suspendisse scelerisque dui nec velit. Duis augue augue, gravida euismod, vulputate ac, facilisis id, sem. Morbi in orci. Nulla purus lacus, pulvinar vel, malesuada ac, mattis nec, quam. Nam molestie scelerisque quam. Nullam feugiat cursus lacus.orem ipsum dolor sit amet, consectetur adipiscing elit. Donec libero risus, commodo vitae, pharetra mollis, posuere eu, pede. Nulla nec tortor. Donec id elit quis purus consectetur consequat. Nam congue semper tellus. Sed erat dolor, dapibus sit amet, venenatis ornare, ultrices ut, nisi. </p>
+
+	<!-- ui-dialog -->
+	<div class="ui-overlay"><div class="ui-widget-overlay"></div><div class="ui-widget-shadow ui-corner-all" style="width: 302px; height: 152px; position: absolute; left: 50px; top: 30px;"></div></div>
+	<div style="position: absolute; width: 280px; height: 130px;left: 50px; top: 30px; padding: 10px;" class="ui-widget ui-widget-content ui-corner-all">
+		<div class="ui-dialog-content ui-widget-content" style="background: none; border: 0;">
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+		</div>
+	</div>
+
+</div>
+
+<!-- ui-dialog -->
+<div id="dialog" title="Dialog Title">
+	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+</div>
+
+
+
+<h2 class="demoHeaders">Framework Icons (content color preview)</h2>
+<ul id="icons" class="ui-widget ui-helper-clearfix">
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-carat-1-n"><span class="ui-icon ui-icon-carat-1-n"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-carat-1-ne"><span class="ui-icon ui-icon-carat-1-ne"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-carat-1-e"><span class="ui-icon ui-icon-carat-1-e"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-carat-1-se"><span class="ui-icon ui-icon-carat-1-se"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-carat-1-s"><span class="ui-icon ui-icon-carat-1-s"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-carat-1-sw"><span class="ui-icon ui-icon-carat-1-sw"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-carat-1-w"><span class="ui-icon ui-icon-carat-1-w"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-carat-1-nw"><span class="ui-icon ui-icon-carat-1-nw"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-carat-2-n-s"><span class="ui-icon ui-icon-carat-2-n-s"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-carat-2-e-w"><span class="ui-icon ui-icon-carat-2-e-w"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-triangle-1-n"><span class="ui-icon ui-icon-triangle-1-n"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-triangle-1-ne"><span class="ui-icon ui-icon-triangle-1-ne"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-triangle-1-e"><span class="ui-icon ui-icon-triangle-1-e"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-triangle-1-se"><span class="ui-icon ui-icon-triangle-1-se"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-triangle-1-s"><span class="ui-icon ui-icon-triangle-1-s"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-triangle-1-sw"><span class="ui-icon ui-icon-triangle-1-sw"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-triangle-1-w"><span class="ui-icon ui-icon-triangle-1-w"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-triangle-1-nw"><span class="ui-icon ui-icon-triangle-1-nw"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-triangle-2-n-s"><span class="ui-icon ui-icon-triangle-2-n-s"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-triangle-2-e-w"><span class="ui-icon ui-icon-triangle-2-e-w"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrow-1-n"><span class="ui-icon ui-icon-arrow-1-n"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrow-1-ne"><span class="ui-icon ui-icon-arrow-1-ne"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrow-1-e"><span class="ui-icon ui-icon-arrow-1-e"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrow-1-se"><span class="ui-icon ui-icon-arrow-1-se"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrow-1-s"><span class="ui-icon ui-icon-arrow-1-s"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrow-1-sw"><span class="ui-icon ui-icon-arrow-1-sw"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrow-1-w"><span class="ui-icon ui-icon-arrow-1-w"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrow-1-nw"><span class="ui-icon ui-icon-arrow-1-nw"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrow-2-n-s"><span class="ui-icon ui-icon-arrow-2-n-s"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrow-2-ne-sw"><span class="ui-icon ui-icon-arrow-2-ne-sw"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrow-2-e-w"><span class="ui-icon ui-icon-arrow-2-e-w"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrow-2-se-nw"><span class="ui-icon ui-icon-arrow-2-se-nw"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrowstop-1-n"><span class="ui-icon ui-icon-arrowstop-1-n"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrowstop-1-e"><span class="ui-icon ui-icon-arrowstop-1-e"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrowstop-1-s"><span class="ui-icon ui-icon-arrowstop-1-s"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrowstop-1-w"><span class="ui-icon ui-icon-arrowstop-1-w"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrowthick-1-n"><span class="ui-icon ui-icon-arrowthick-1-n"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrowthick-1-ne"><span class="ui-icon ui-icon-arrowthick-1-ne"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrowthick-1-e"><span class="ui-icon ui-icon-arrowthick-1-e"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrowthick-1-se"><span class="ui-icon ui-icon-arrowthick-1-se"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrowthick-1-s"><span class="ui-icon ui-icon-arrowthick-1-s"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrowthick-1-sw"><span class="ui-icon ui-icon-arrowthick-1-sw"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrowthick-1-w"><span class="ui-icon ui-icon-arrowthick-1-w"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrowthick-1-nw"><span class="ui-icon ui-icon-arrowthick-1-nw"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrowthick-2-n-s"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrowthick-2-ne-sw"><span class="ui-icon ui-icon-arrowthick-2-ne-sw"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrowthick-2-e-w"><span class="ui-icon ui-icon-arrowthick-2-e-w"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrowthick-2-se-nw"><span class="ui-icon ui-icon-arrowthick-2-se-nw"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrowthickstop-1-n"><span class="ui-icon ui-icon-arrowthickstop-1-n"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrowthickstop-1-e"><span class="ui-icon ui-icon-arrowthickstop-1-e"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrowthickstop-1-s"><span class="ui-icon ui-icon-arrowthickstop-1-s"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrowthickstop-1-w"><span class="ui-icon ui-icon-arrowthickstop-1-w"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrowreturnthick-1-w"><span class="ui-icon ui-icon-arrowreturnthick-1-w"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrowreturnthick-1-n"><span class="ui-icon ui-icon-arrowreturnthick-1-n"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrowreturnthick-1-e"><span class="ui-icon ui-icon-arrowreturnthick-1-e"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrowreturnthick-1-s"><span class="ui-icon ui-icon-arrowreturnthick-1-s"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrowreturn-1-w"><span class="ui-icon ui-icon-arrowreturn-1-w"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrowreturn-1-n"><span class="ui-icon ui-icon-arrowreturn-1-n"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrowreturn-1-e"><span class="ui-icon ui-icon-arrowreturn-1-e"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrowreturn-1-s"><span class="ui-icon ui-icon-arrowreturn-1-s"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrowrefresh-1-w"><span class="ui-icon ui-icon-arrowrefresh-1-w"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrowrefresh-1-n"><span class="ui-icon ui-icon-arrowrefresh-1-n"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrowrefresh-1-e"><span class="ui-icon ui-icon-arrowrefresh-1-e"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrowrefresh-1-s"><span class="ui-icon ui-icon-arrowrefresh-1-s"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrow-4"><span class="ui-icon ui-icon-arrow-4"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-arrow-4-diag"><span class="ui-icon ui-icon-arrow-4-diag"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-extlink"><span class="ui-icon ui-icon-extlink"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-newwin"><span class="ui-icon ui-icon-newwin"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-refresh"><span class="ui-icon ui-icon-refresh"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-shuffle"><span class="ui-icon ui-icon-shuffle"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-transfer-e-w"><span class="ui-icon ui-icon-transfer-e-w"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-transferthick-e-w"><span class="ui-icon ui-icon-transferthick-e-w"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-folder-collapsed"><span class="ui-icon ui-icon-folder-collapsed"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-folder-open"><span class="ui-icon ui-icon-folder-open"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-document"><span class="ui-icon ui-icon-document"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-document-b"><span class="ui-icon ui-icon-document-b"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-note"><span class="ui-icon ui-icon-note"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-mail-closed"><span class="ui-icon ui-icon-mail-closed"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-mail-open"><span class="ui-icon ui-icon-mail-open"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-suitcase"><span class="ui-icon ui-icon-suitcase"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-comment"><span class="ui-icon ui-icon-comment"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-person"><span class="ui-icon ui-icon-person"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-print"><span class="ui-icon ui-icon-print"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-trash"><span class="ui-icon ui-icon-trash"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-locked"><span class="ui-icon ui-icon-locked"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-unlocked"><span class="ui-icon ui-icon-unlocked"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-bookmark"><span class="ui-icon ui-icon-bookmark"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-tag"><span class="ui-icon ui-icon-tag"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-home"><span class="ui-icon ui-icon-home"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-flag"><span class="ui-icon ui-icon-flag"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-calculator"><span class="ui-icon ui-icon-calculator"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-cart"><span class="ui-icon ui-icon-cart"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-pencil"><span class="ui-icon ui-icon-pencil"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-clock"><span class="ui-icon ui-icon-clock"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-disk"><span class="ui-icon ui-icon-disk"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-calendar"><span class="ui-icon ui-icon-calendar"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-zoomin"><span class="ui-icon ui-icon-zoomin"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-zoomout"><span class="ui-icon ui-icon-zoomout"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-search"><span class="ui-icon ui-icon-search"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-wrench"><span class="ui-icon ui-icon-wrench"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-gear"><span class="ui-icon ui-icon-gear"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-heart"><span class="ui-icon ui-icon-heart"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-star"><span class="ui-icon ui-icon-star"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-link"><span class="ui-icon ui-icon-link"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-cancel"><span class="ui-icon ui-icon-cancel"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-plus"><span class="ui-icon ui-icon-plus"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-plusthick"><span class="ui-icon ui-icon-plusthick"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-minus"><span class="ui-icon ui-icon-minus"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-minusthick"><span class="ui-icon ui-icon-minusthick"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-close"><span class="ui-icon ui-icon-close"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-closethick"><span class="ui-icon ui-icon-closethick"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-key"><span class="ui-icon ui-icon-key"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-lightbulb"><span class="ui-icon ui-icon-lightbulb"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-scissors"><span class="ui-icon ui-icon-scissors"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-clipboard"><span class="ui-icon ui-icon-clipboard"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-copy"><span class="ui-icon ui-icon-copy"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-contact"><span class="ui-icon ui-icon-contact"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-image"><span class="ui-icon ui-icon-image"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-video"><span class="ui-icon ui-icon-video"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-script"><span class="ui-icon ui-icon-script"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-alert"><span class="ui-icon ui-icon-alert"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-info"><span class="ui-icon ui-icon-info"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-notice"><span class="ui-icon ui-icon-notice"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-help"><span class="ui-icon ui-icon-help"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-check"><span class="ui-icon ui-icon-check"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-bullet"><span class="ui-icon ui-icon-bullet"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-radio-off"><span class="ui-icon ui-icon-radio-off"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-radio-on"><span class="ui-icon ui-icon-radio-on"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-pin-w"><span class="ui-icon ui-icon-pin-w"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-pin-s"><span class="ui-icon ui-icon-pin-s"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-play"><span class="ui-icon ui-icon-play"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-pause"><span class="ui-icon ui-icon-pause"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-seek-next"><span class="ui-icon ui-icon-seek-next"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-seek-prev"><span class="ui-icon ui-icon-seek-prev"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-seek-end"><span class="ui-icon ui-icon-seek-end"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-seek-first"><span class="ui-icon ui-icon-seek-first"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-stop"><span class="ui-icon ui-icon-stop"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-eject"><span class="ui-icon ui-icon-eject"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-volume-off"><span class="ui-icon ui-icon-volume-off"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-volume-on"><span class="ui-icon ui-icon-volume-on"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-power"><span class="ui-icon ui-icon-power"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-signal-diag"><span class="ui-icon ui-icon-signal-diag"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-signal"><span class="ui-icon ui-icon-signal"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-battery-0"><span class="ui-icon ui-icon-battery-0"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-battery-1"><span class="ui-icon ui-icon-battery-1"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-battery-2"><span class="ui-icon ui-icon-battery-2"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-battery-3"><span class="ui-icon ui-icon-battery-3"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-circle-plus"><span class="ui-icon ui-icon-circle-plus"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-circle-minus"><span class="ui-icon ui-icon-circle-minus"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-circle-close"><span class="ui-icon ui-icon-circle-close"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-circle-triangle-e"><span class="ui-icon ui-icon-circle-triangle-e"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-circle-triangle-s"><span class="ui-icon ui-icon-circle-triangle-s"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-circle-triangle-w"><span class="ui-icon ui-icon-circle-triangle-w"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-circle-triangle-n"><span class="ui-icon ui-icon-circle-triangle-n"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-circle-arrow-e"><span class="ui-icon ui-icon-circle-arrow-e"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-circle-arrow-s"><span class="ui-icon ui-icon-circle-arrow-s"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-circle-arrow-w"><span class="ui-icon ui-icon-circle-arrow-w"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-circle-arrow-n"><span class="ui-icon ui-icon-circle-arrow-n"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-circle-zoomin"><span class="ui-icon ui-icon-circle-zoomin"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-circle-zoomout"><span class="ui-icon ui-icon-circle-zoomout"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-circle-check"><span class="ui-icon ui-icon-circle-check"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-circlesmall-plus"><span class="ui-icon ui-icon-circlesmall-plus"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-circlesmall-minus"><span class="ui-icon ui-icon-circlesmall-minus"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-circlesmall-close"><span class="ui-icon ui-icon-circlesmall-close"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-squaresmall-plus"><span class="ui-icon ui-icon-squaresmall-plus"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-squaresmall-minus"><span class="ui-icon ui-icon-squaresmall-minus"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-squaresmall-close"><span class="ui-icon ui-icon-squaresmall-close"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-grip-dotted-vertical"><span class="ui-icon ui-icon-grip-dotted-vertical"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-grip-dotted-horizontal"><span class="ui-icon ui-icon-grip-dotted-horizontal"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-grip-solid-vertical"><span class="ui-icon ui-icon-grip-solid-vertical"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-grip-solid-horizontal"><span class="ui-icon ui-icon-grip-solid-horizontal"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-gripsmall-diagonal-se"><span class="ui-icon ui-icon-gripsmall-diagonal-se"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-grip-diagonal-se"><span class="ui-icon ui-icon-grip-diagonal-se"></span></li>
+</ul>
+
+
+<!-- Slider -->
+<h2 class="demoHeaders"><a href="03-slider.html">Slider</a></h2>
+<div id="slider"></div>
+
+
+
+<!-- Datepicker -->
+<h2 class="demoHeaders">Datepicker</h2>
+<div id="datepicker"></div>
+
+
+
+<!-- Progressbar -->
+<h2 class="demoHeaders">Progressbar</h2>
+<div id="progressbar"></div>
+
+
+
+<!-- Progressbar -->
+<h2 class="demoHeaders">Selectmenu</h2>
+<select id="selectmenu">
+	<option>Slower</option>
+	<option>Slow</option>
+	<option selected="selected">Medium</option>
+	<option>Fast</option>
+	<option>Faster</option>
+</select>
+
+
+
+<!-- Spinner -->
+<h2 class="demoHeaders">Spinner</h2>
+<input id="spinner">
+
+
+
+<!-- Menu -->
+<h2 class="demoHeaders">Menu</h2>
+<ul style="width:100px;" id="menu">
+	<li>Item 1</li>
+	<li>Item 2</li>
+	<li>Item 3
+		<ul>
+			<li>Item 3-1</li>
+			<li>Item 3-2</li>
+			<li>Item 3-3</li>
+			<li>Item 3-4</li>
+			<li>Item 3-5</li>
+		</ul>
+	</li>
+	<li>Item 4</li>
+	<li>Item 5</li>
+</ul>
+
+
+
+<!-- Tooltip -->
+<h2 class="demoHeaders"><a href="04-tooltip.html">Tooltip</a></h2>
+<p id="tooltip">
+	<a href="#" title="That&apos;s what this widget is">Tooltips</a> can be attached to any element. When you hover
+the element with your mouse, the title attribute is displayed in a little box next to the element, just like a native tooltip.
+</p>
+
+
+<!-- Highlight / Error -->
+<h2 class="demoHeaders">Highlight / Error</h2>
+<div class="ui-widget">
+	<div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;">
+		<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
+		<strong>Hey!</strong> Sample ui-state-highlight style.</p>
+	</div>
+</div>
+<br>
+<div class="ui-widget">
+	<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;">
+		<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+		<strong>Alert:</strong> Sample ui-state-error style.</p>
+	</div>
+</div>
+
+<script src="../jquery-ui-1.11.0.custom/external/jquery/jquery.js"></script>
+<script src="../jquery-ui-1.11.0.custom/jquery-ui.js"></script>
+<script>
+
+$(function(){
+	$("#accordion").accordion(
+		{
+		collapsible:true,
+		heightStyle:content
+		}
+	)
+	});
+
+
+
+var availableTags = [
+	"ActionScript",
+	"AppleScript",
+	"Asp",
+	"BASIC",
+	"C",
+	"C++",
+	"Clojure",
+	"COBOL",
+	"ColdFusion",
+	"Erlang",
+	"Fortran",
+	"Groovy",
+	"Haskell",
+	"Java",
+	"JavaScript",
+	"Lisp",
+	"Perl",
+	"PHP",
+	"Python",
+	"Ruby",
+	"Scala",
+	"Scheme"
+];
+$( "#autocomplete" ).autocomplete({
+	source: availableTags,
+	autoFocus:true
+});
+
+var countries = [
+                  { label: "India", value: "IND" },
+                  { label: "Australia", value: "AUS" }
+               ];
+$( "#autocomplete-country" ).autocomplete({
+	source: countries,
+	autoFocus:true
+});
+
+
+
+
+$( "#button" ).button();
+$( "#radioset" ).buttonset();
+
+
+
+$( "#tabs" ).tabs();
+
+
+
+$( "#dialog" ).dialog({
+	autoOpen: false,
+	width: 400,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
+// Link to open the dialog
+$( "#dialog-link" ).click(function( event ) {
+	$( "#dialog" ).dialog( "open" );
+	event.preventDefault();
+});
+
+
+
+$( "#datepicker" ).datepicker({
+	inline: true
+});
+
+
+
+$( "#slider" ).slider({
+	range: true,
+	values: [ 17, 67 ]
+});
+
+
+
+$( "#progressbar" ).progressbar({
+	value: 20
+});
+
+
+
+$( "#spinner" ).spinner();
+
+
+
+$( "#menu" ).menu();
+
+
+
+$( "#tooltip" ).tooltip();
+
+
+
+$( "#selectmenu" ).selectmenu();
+
+
+// Hover states on the static widgets
+$( "#dialog-link, #icons li" ).hover(
+	function() {
+		$( this ).addClass( "ui-state-hover" );
+	},
+	function() {
+		$( this ).removeClass( "ui-state-hover" );
+	}
+);
+</script>
+
+  
+<a href="example02.html">Example 2</a>	  
+   </body>
+</html>

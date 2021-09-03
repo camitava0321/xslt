@@ -1,0 +1,74 @@
+	body{
+		font: 62.5% "Trebuchet MS", sans-serif;
+		margin: 50px;
+	}
+	.demoHeaders {
+		margin-top: 2em;
+	}
+	#dialog-link {
+		padding: .4em 1em .4em 20px;
+		text-decoration: none;
+		position: relative;
+	}
+	#dialog-link span.ui-icon {
+		margin: 0 5px 0 0;
+		position: absolute;
+		left: .2em;
+		top: 50%;
+		margin-top: -8px;
+	}
+	#icons {
+		margin: 0;
+		padding: 0;
+	}
+	#icons li {
+		margin: 2px;
+		position: relative;
+		padding: 4px 0;
+		cursor: pointer;
+		float: left;
+		list-style: none;
+	}
+	#icons span.ui-icon {
+		float: left;
+		margin: 0 4px;
+	}
+	.fakewindowcontain .ui-widget-overlay {
+		position: absolute;
+	}
+	select {
+		width: 200px;
+	}
+	table, th , td {
+	  border: 1px solid grey;
+	  border-collapse: collapse;
+	  padding: 5px;
+	}
+	table tr:nth-child(odd) {
+	  background-color: #f2f2f2;
+	}
+	table tr:nth-child(even) {
+	  background-color: #ffffff;
+	}
+	#accordion{font-size: 14px;}
+	
+	/* For Tooltips - Start */
+	.ui-tooltip-content::after, .ui-tooltip-content::before {
+	content: "";
+	position: absolute;
+	border-style: solid;
+	display: block;
+	left: 90px;
+	}
+	.ui-tooltip-content::before {
+	bottom: -10px;
+	border-color: #AAA transparent;
+	border-width: 10px 10px 0;
+	}
+	.ui-tooltip-content::after {
+	bottom: -7px;
+	border-color: white transparent;
+	border-width: 10px 10px 0;
+	}
+	/* For Tooltips - End */
+		 
